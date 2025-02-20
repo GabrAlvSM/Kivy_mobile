@@ -1,3 +1,6 @@
+from itertools import count
+from operator import le
+from pydoc import text
 from kivy.app import App
 from kivy.uix.label import Label
 from kivy.uix.button import Button
@@ -6,19 +9,24 @@ from kivy.uix.slider import Slider
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.core.window import Window
+from numpy import append, number
 
 Window.size = (500,500)
 
 class Caixas_grid(App):
     def build(self):
-
+    
         layout = BoxLayout(orientation = 'vertical')
         header = BoxLayout(orientation = 'horizontal')
         body = BoxLayout(orientation='horizontal')
+        body.size_hint = (1.0, 0.8)
 
         body = GridLayout(cols=4)
 
-        self.texto = Label(text='Texto')
+        self.zerar = Button(text='C')
+        self.zerar.size_hint = (1.0, 0.2)
+
+        self.display = Label(text='', font_size='35px')
         
         self.n1 = Button(text='1')
         self.n2 = Button(text='2')
@@ -34,29 +42,47 @@ class Caixas_grid(App):
         self.kminus = Button(text='-')
         self.kmult = Button(text='*')
         self.kdiv = Button(text='/')
-        self.kcomma = Button(text=',')
+        self.kdot = Button(text='.')
 
-        self.n1.bind(on_press = self.imprimir)
-        self.n2.bind(on_press = self.imprimir)
-        self.n3.bind(on_press = self.imprimir)
-        self.n4.bind(on_press = self.imprimir)
-        self.n5.bind(on_press = self.imprimir)
-        self.n6.bind(on_press = self.imprimir)
-        self.n7.bind(on_press = self.imprimir)
-        self.n8.bind(on_press = self.imprimir)
-        self.n9.bind(on_press = self.imprimir)
-        self.n0.bind(on_press = self.imprimir)
-        self.kplus.bind(on_press = self.imprimir)
-        self.kminus.bind(on_press = self.imprimir)
-        self.kmult.bind(on_press = self.imprimir)
-        self.kcomma.bind(on_press = self.imprimir)
+        self.kres = Button(text='=')
+        self.kres.size_hint = (1.0, 0.3)
+
+
+        self.zerar.bind(on_press = self.limpar)
+
+        self.n1.bind(on_press = self.armazenar)
+        self.n2.bind(on_press = self.armazenar)
+        self.n3.bind(on_press = self.armazenar)
+        self.n4.bind(on_press = self.armazenar)
+        self.n5.bind(on_press = self.armazenar)
+        self.n6.bind(on_press = self.armazenar)
+        self.n7.bind(on_press = self.armazenar)
+        self.n8.bind(on_press = self.armazenar)
+        self.n9.bind(on_press = self.armazenar)
+        self.n0.bind(on_press = self.armazenar)
+
+        self.kplus.bind(on_press = self.armazenar)
+        self.kminus.bind(on_press = self.armazenar)
+        self.kmult.bind(on_press = self.armazenar)
+        self.kdiv.bind(on_press = self.armazenar)
+
+        self.kdot.bind(on_press = self.armazenar)
+
+        self.kres.bind(on_press = self.calcular)
         
         devs = Label(text='Made by Alv')
 
+
+
         devs.size_hint_y=(.2)
 
-        header.add_widget(self.texto)
+        header.add_widget(self.display)
 
+        body.add_widget(self.kplus)
+        body.add_widget(self.kminus)
+        body.add_widget(self.kmult)
+        body.add_widget(self.kdiv)
+        
         body.add_widget(self.n1)
         body.add_widget(self.n2)
         body.add_widget(self.n3)
@@ -67,18 +93,49 @@ class Caixas_grid(App):
         body.add_widget(self.n8)
         body.add_widget(self.n9)
         body.add_widget(self.n0)
+        
+        body.add_widget(self.kdot)
 
         layout.add_widget(header)
+        layout.add_widget(self.zerar)
         layout.add_widget(body) 
+        layout.add_widget(self.kres)
         layout.add_widget(devs)    
 
         return layout
     
     def imprimir(self,event):
-        num = int(event.text)
-        print(num)
+        self.display.text = event.text
+        print(event.text)
+
+    def limpar(self,event):
+        # print(self.display.text)
+        self.display.text = ''
+
+    def armazenar(self,event):
+        # num = int(event.text)
+        self.display.text += event.text
+
+
+    def calcular(self,event):
         
+        if '+' in self.display.text:
+            
+            num = self.display.text.split('+')
+            # print (num)
+            
+            for pos in num:
+                res = float(pos)
 
+        self.display.text = str(res)
+            
+            
+        # elif '-' in self.display.text:
 
+        #     num = self.display.text.split('-')
+            
+
+            # print (sub)
+        
 if __name__ == '__main__':
     Caixas_grid().run()
